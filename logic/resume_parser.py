@@ -1,3 +1,5 @@
+"""CV parsing logic using Gemini AI."""
+
 import google.generativeai as gemini
 import fitz
 import pytesseract
@@ -7,15 +9,16 @@ import json
 import os
 import re
 from datetime import datetime
+from loguru import logger
 
-# ---------- Setup Gemini ----------
-load_dotenv()
-api_key = os.getenv("GEMINI_API_KEY")
-gemini.configure(api_key=api_key)
+from config.settings import settings
+
+# Setup Gemini
+gemini.configure(api_key=settings.gemini_api_key)
 
 
-# ---------- STEP 1: Extract text ----------
 def extract_text_from_pdf(path):
+    """Extract text from PDF file."""
     doc = fitz.open(path)
     text = ""
     for page in doc:
@@ -24,99 +27,86 @@ def extract_text_from_pdf(path):
 
 
 def extract_text_from_img(path):
+    """Extract text from image using OCR."""
     img = Image.open(path)
     return pytesseract.image_to_string(img)
 
 
-# ---------- STEP 2: Use LLM to Extract info ----------
 def extract_with_gemini(text):
+    """Extract structured data using Gemini AI."""
     prompt = f'''
-You are a STRICT resume parser.
-Your job is to extract ONLY information that is explicitly written in the resume text. 
-Do NOT infer, guess, or add any information that is not present.
+    You are a STRICT resume parser.
+    Your job is to extract ONLY information that is explicitly written in the resume text. 
+    Do NOT infer, guess, or add any information that is not present.
 
-Return a valid JSON with EXACTLY these keys (no extra keys, no missing keys):
+    Return a valid JSON with EXACTLY these keys (no extra keys, no missing keys):
 
-{{
-  "name": "",
-  "summary": "",
-  "education": [
-    {{"degree": "", "school": "", "gpa": "", "year": ""}}
-  ],
-  "experiences": [
     {{
-      "role": "",
-      "organization": "",
-      "start_date": "",
-      "end_date": "",
-      "years": 0.0,
-      "location": "",
-      "highlights": []
+      "name": "",
+      "summary": "",
+      "education": [
+        {{"degree": "", "school": "", "gpa": "", "year": ""}}
+      ],
+      "experiences": [
+        {{
+          "role": "",
+          "organization": "",
+          "start_date": "",
+          "end_date": "",
+          "years": 0.0,
+          "location": "",
+          "highlights": []
+        }}
+      ],
+      "projects": [
+        {{
+          "role": "",
+          "highlights": []
+        }}
+      ],
+      "skills": [],
+      "languages": [],
+      "certifications": [
+        {{"name": "", "issuer": "", "year": ""}}
+      ],
+      "awards": [
+        {{"title": "", "issuer": "", "year": ""}}
+      ],
+      "activities": [
+        {{
+          "role": "",
+          "organization": "",
+          "start_date": "",
+          "end_date": "",
+          "years": 0.0,
+          "highlights": []
+        }}
+      ],
+      "publications": [
+        {{"title": "", "journal": "", "year": "", "doi": ""}}
+      ],
+      "licenses": [
+        {{"name": "", "issuer": "", "year": ""}}
+      ]
     }}
-  ],
-  "projects": [
-    {{
-      "role": "",
-      "highlights": []
-    }}
-  ],
-  "skills": [],
-  "languages": [],
-  "certifications": [
-    {{"name": "", "issuer": "", "year": ""}}
-  ],
-  "awards": [
-    {{"title": "", "issuer": "", "year": ""}}
-  ],
-  "activities": [
-    {{
-      "role": "",
-      "organization": "",
-      "start_date": "",
-      "end_date": "",
-      "years": 0.0,
-      "highlights": []
-    }}
-  ],
-  "publications": [
-    {{"title": "", "journal": "", "year": "", "doi": ""}}
-  ],
-  "licenses": [
-    {{"name": "", "issuer": "", "year": ""}}
-  ]
-}}
 
-Strict rules you MUST follow:
-1. Output must be strictly valid JSON. No extra commentary, no markdown code fences.
-2. Always include ALL keys, even if empty.
-   - "" for strings
-   - [] for arrays
-   - 0.0 for numbers
-3. "summary": only fill if explicitly written. Otherwise "".
-4. "education.degree": only major/field of study (e.g. "Computer Science").
-5. "education.school": only the university/college/school name.
-6. "education.year": extract graduation year or study period if available. Otherwise "".
-7. "education.gpa": must match pattern like "3.5/4.0". If invalid, leave "".
-8. "experiences": only for real work (internship, part-time, full-time).
-   - "role": job title
-   - "organization": company/organization
-   - "start_date": extract as YYYY-MM or YYYY if available
-   - "end_date": extract as YYYY-MM, YYYY or "Present"
-   - "years": numeric float (will be validated again in code)
-   - "location": location if available
-   - "highlights": bullet points or short action statements only
-9. "projects": only academic/personal/research projects. Never mix with experiences.
-10. "skills" and "languages":
-    - Arrays, unique, no duplicates
-    - Normalize casing (JavaScript, Node.js, PostgreSQL…)
-11. "languages": format "English - C1" if level available, else keep descriptor.
-12. "certifications", "awards", "activities", "publications", "licenses": extract if present.
-13. Remove duplicates across fields.
-14. All extracted text must be in English.
+    Strict rules you MUST follow:
+    1. Output must be strictly valid JSON. No extra commentary, no markdown code fences.
+    2. Always include ALL keys, even if empty.
+    3. "summary": only fill if explicitly written. Otherwise "".
+    4. "education.degree": only major/field of study (e.g. "Computer Science").
+    5. "education.school": only the university/college/school name.
+    6. "education.year": extract graduation year or study period if available. Otherwise "".
+    7. "education.gpa": must match pattern like "3.5/4.0". If invalid, leave "".
+    8. "experiences": only for real work (internship, part-time, full-time).
+    9. "projects": only academic/personal/research projects. Never mix with experiences.
+    10. "skills" and "languages": Arrays, unique, no duplicates
+    11. All extracted text must be in English.
 
-Resume text:
-{text}
-'''
+    Resume text:
+    {text}
+    '''
+    
     model = gemini.GenerativeModel("gemini-2.5-flash")
     response = model.generate_content(prompt)
 
@@ -134,13 +124,13 @@ Resume text:
     try:
         return json.loads(raw_output)
     except Exception as e:
-        print("JSON parse error:", e)
-        print("Raw output:", raw_output[:300])
+        logger.error(f"JSON parse error: {e}")
+        logger.error(f"Raw output: {raw_output[:300]}")
         return {}
 
 
-# ---------- STEP 3a: Filter highlights ----------
 def filter_highlights(raw_list):
+    """Filter and clean highlights."""
     filtered = []
     action_verbs = [
         "developed", "designed", "implemented", "led", "analyzed",
@@ -160,8 +150,8 @@ def filter_highlights(raw_list):
     return list(dict.fromkeys(filtered))
 
 
-# ---------- STEP 3b: Refine highlights ----------
 def refine_highlights(highlights, max_words=18):
+    """Refine highlights to be concise."""
     refined = []
     for hl in highlights:
         text = str(hl).strip("•- \n\t").strip()
@@ -175,6 +165,7 @@ def refine_highlights(highlights, max_words=18):
                 refined.append(p)
         else:
             refined.append(text)
+    
     normalized = []
     for item in refined:
         item = item.strip()
@@ -184,12 +175,12 @@ def refine_highlights(highlights, max_words=18):
         if not item.endswith('.'):
             item += '.'
         normalized.append(item)
-    unique = list(dict.fromkeys(normalized))
-    return unique
+    
+    return list(dict.fromkeys(normalized))
 
 
-# ---------- STEP 3c: Compute years ----------
 def compute_years(start_date: str, end_date: str) -> float:
+    """Compute years of experience."""
     if not start_date:
         return 0.0
 
@@ -213,8 +204,8 @@ def compute_years(start_date: str, end_date: str) -> float:
     return round(diff_years, 2)
 
 
-# ---------- STEP 4: Validate JSON ----------
 def validate_json(data):
+    """Validate and clean extracted JSON data."""
     if not isinstance(data, dict):
         return {}
 
@@ -235,7 +226,7 @@ def validate_json(data):
 
     clean_data = {k: data.get(k, v) for k, v in schema.items()}
 
-    # --- normalize education ---
+    # Normalize education
     fixed_edu = []
     for edu in clean_data.get("education", []):
         if isinstance(edu, dict):
@@ -250,7 +241,7 @@ def validate_json(data):
             fixed_edu.append(fixed)
     clean_data["education"] = fixed_edu if fixed_edu else schema["education"]
 
-    # --- normalize experiences ---
+    # Normalize experiences
     fixed_exps = []
     for exp in data.get("experiences", []):
         if isinstance(exp, dict):
@@ -266,7 +257,7 @@ def validate_json(data):
                 fixed_exps.append(fixed)
     clean_data["experiences"] = fixed_exps if fixed_exps else []
 
-    # --- normalize projects ---
+    # Normalize projects
     fixed_projs = []
     for proj in data.get("projects", []):
         if isinstance(proj, dict):
@@ -278,7 +269,7 @@ def validate_json(data):
                 fixed_projs.append(fixed)
     clean_data["projects"] = fixed_projs if fixed_projs else []
 
-    # --- normalize activities ---
+    # Normalize activities
     fixed_acts = []
     for act in data.get("activities", []):
         if isinstance(act, dict):
@@ -293,7 +284,7 @@ def validate_json(data):
                 fixed_acts.append(fixed)
     clean_data["activities"] = fixed_acts if fixed_acts else []
 
-    # --- normalize skills & languages ---
+    # Normalize skills & languages
     for key in ["skills", "languages"]:
         val = clean_data.get(key, [])
         if isinstance(val, str):
@@ -306,8 +297,8 @@ def validate_json(data):
     return clean_data
 
 
-# ---------- Wrapper ----------
 def parse_resume(file_path: str):
+    """Main function to parse resume from file."""
     ext = os.path.splitext(file_path)[1].lower()
     if ext == ".pdf":
         raw_text = extract_text_from_pdf(file_path)
@@ -319,17 +310,3 @@ def parse_resume(file_path: str):
     llm_data = extract_with_gemini(raw_text)
     final_data = validate_json(llm_data)
     return final_data
-
-
-# ---------- Run ----------
-if __name__ == "__main__":
-    file_path = "public/resume.pdf"
-    
-    if not os.path.exists(file_path):
-        print("❌ File not found:", file_path)
-    else:
-        try:
-            result = parse_resume(file_path)
-            print(json.dumps(result, indent=2, ensure_ascii=False))
-        except ValueError as e:
-            print("❌", e)

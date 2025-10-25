@@ -1,0 +1,37 @@
+{
+  "title": "Senior Python Developer",
+  "company": "Tech Innovations Inc",
+  "location": "San Francisco, CA (Remote OK)",
+  "description": "We are seeking a highly skilled Senior Python Developer to join our growing team. The ideal candidate will have extensive experience with Python development, web frameworks, and cloud technologies. You will be responsible for designing, developing, and maintaining scalable web applications and APIs.",
+  "required_skills": [
+    "Python",
+    "Django",
+    "Flask",
+    "PostgreSQL",
+    "Redis",
+    "Docker",
+    "AWS",
+    "Git",
+    "REST APIs",
+    "Microservices"
+  ],
+  "required_experience_years": 5,
+  "employment_type": "Full-time",
+  "salary_range": "$120,000 - $160,000",
+  "source_url": "https://techinnovations.com/careers/senior-python-dev",
+  "benefits": [
+    "Health insurance",
+    "Dental and vision",
+    "401k matching",
+    "Flexible PTO",
+    "Remote work options"
+  ],
+  "responsibilities": [
+    "Design and develop scalable web applications",
+    "Write clean, maintainable Python code",
+    "Collaborate with cross-functional teams",
+    "Mentor junior developers",
+    "Implement CI/CD pipelines",
+    "Optimize application performance"
+  ]
+}

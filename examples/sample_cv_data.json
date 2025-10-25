@@ -1,0 +1,93 @@
+{
+  "name": "John Doe",
+  "summary": "Experienced Python developer with 6+ years of experience in web development, cloud technologies, and team leadership. Passionate about building scalable applications and mentoring junior developers.",
+  "education": [
+    {
+      "degree": "Computer Science",
+      "school": "University of California, Berkeley",
+      "gpa": "3.8/4.0",
+      "year": "2018"
+    }
+  ],
+  "experiences": [
+    {
+      "role": "Senior Python Developer",
+      "organization": "Tech Solutions Corp",
+      "start_date": "2020-03",
+      "end_date": "Present",
+      "years": 3.8,
+      "location": "San Francisco, CA",
+      "highlights": [
+        "Led development of microservices architecture serving 1M+ users",
+        "Implemented CI/CD pipelines reducing deployment time by 60%",
+        "Mentored 3 junior developers and conducted code reviews",
+        "Optimized database queries improving response time by 40%"
+      ]
+    },
+    {
+      "role": "Python Developer",
+      "organization": "StartupXYZ",
+      "start_date": "2018-06",
+      "end_date": "2020-02",
+      "years": 1.7,
+      "location": "Remote",
+      "highlights": [
+        "Developed REST APIs using Django and Flask",
+        "Integrated third-party services and payment systems",
+        "Implemented automated testing with 90% code coverage"
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "role": "Personal Portfolio Website",
+      "highlights": [
+        "Built with Django and PostgreSQL",
+        "Deployed on AWS with Docker containers",
+        "Features include blog, project showcase, and contact form"
+      ]
+    }
+  ],
+  "skills": [
+    "Python",
+    "Django",
+    "Flask",
+    "PostgreSQL",
+    "Redis",
+    "Docker",
+    "AWS",
+    "Git",
+    "REST APIs",
+    "Microservices",
+    "JavaScript",
+    "React",
+    "Linux",
+    "MongoDB"
+  ],
+  "languages": [
+    "English - Native",
+    "Spanish - Conversational"
+  ],
+  "certifications": [
+    {
+      "name": "AWS Certified Solutions Architect",
+      "issuer": "Amazon Web Services",
+      "year": "2021"
+    },
+    {
+      "name": "Python Institute PCAP",
+      "issuer": "Python Institute",
+      "year": "2020"
+    }
+  ],
+  "awards": [
+    {
+      "title": "Employee of the Year",
+      "issuer": "Tech Solutions Corp",
+      "year": "2022"
+    }
+  ],
+  "activities": [],
+  "publications": [],
+  "licenses": []
+}
