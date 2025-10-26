@@ -1,14 +1,12 @@
 # jdParser.py
 import re
 import google.generativeai as gemini
-from dotenv import load_dotenv
+from config import GEMINI_API_KEY
 import os
 import json
 
 # --- Cấu hình ---
-load_dotenv()
-api_key = os.getenv("GEMINI_API_KEY")
-gemini.configure(api_key=api_key)
+gemini.configure(api_key=GEMINI_API_KEY)
 
 def parse_job_description(jd_text: str) -> dict:
     """
