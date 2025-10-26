@@ -2,16 +2,14 @@ import google.generativeai as gemini
 import fitz
 import pytesseract
 from PIL import Image
-from dotenv import load_dotenv
+from config import GEMINI_API_KEY
 import json
 import os
 import re
 from datetime import datetime
 
 # ---------- Setup Gemini ----------
-load_dotenv()
-api_key = os.getenv("GEMINI_API_KEY")
-gemini.configure(api_key=api_key)
+gemini.configure(api_key=GEMINI_API_KEY)
 
 
 # ---------- STEP 1: Extract text ----------
