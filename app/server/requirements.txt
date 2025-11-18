@@ -23,3 +23,13 @@ chromadb==1.2.1
 pymupdf==1.22.5
 pytesseract==0.3.13
 pillow==10.4.0
+
+
+# === Web Server ===
+fastapi
+uvicorn
+beanie
+motor
+strawberry-graphql
+pydantic
+python-dotenv
