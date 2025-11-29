@@ -112,7 +112,7 @@ export function CandidateListModal({ open, onOpenChange }: CandidateListModalPro
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="max-w-[1100px] w-[700px] rounded-2xl max-h-[85vh] overflow-hidden flex flex-col">
+        <DialogContent className="max-w-[1100px] rounded-2xl max-h-[85vh] overflow-hidden flex flex-col">
           <DialogHeader>
             <DialogTitle>Candidate Matches</DialogTitle>
           </DialogHeader>

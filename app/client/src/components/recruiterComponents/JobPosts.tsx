@@ -107,37 +107,14 @@ export function JobPosts() {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const generateMastodonPreview = () => {
-    // Format responsibilities and requirements as hashtags if provided
-    const formatAsBullets = (text: string) => {
-      if (!text) return '';
-      const lines = text.split('\n').filter(l => l.trim());
-      return lines.map(line => `• ${line.trim()}`).join('\n');
-    };
-    
-    return {
-      title: formData.title || 'Job Title',
-      roleSummary: formData.roleSummary || 'Role summary will appear here...',
-      responsibilities: formatAsBullets(formData.responsibilities) || '• Responsibility 1\n• Responsibility 2',
-      requirements: formatAsBullets(formData.requirements) || '• Requirement 1\n• Requirement 2',
-      benefits: formData.benefits || 'Benefits information...',
-      workingTime: formData.workingTime ? `⏰ ${formData.workingTime}` : '',
-      probation: formData.probationaryPeriod ? `📋 Probation: ${formData.probationaryPeriod}` : '',
-      location: formData.location ? `📍 ${formData.location}` : '',
-      jobType: `💼 ${jobType.charAt(0).toUpperCase() + jobType.slice(1)}`,
-      dueDate: formData.dueDate ? `📅 Apply by ${formData.dueDate}` : '',
-      status: status,
-    };
-  };
 
-  const preview = generateMastodonPreview();
 
   return (
     <div className="max-w-[900px] mx-auto space-y-6 pb-4">
       {/* Header */}
       <div className="space-y-1">
         <h2>Job Post Editor</h2>
-        <p className="text-muted-foreground">Create or edit a job posting published to Mastodon</p>
+        <p className="text-muted-foreground">Create or edit a job posting</p>
       </div>
 
       {/* Form Container */}
@@ -211,11 +188,6 @@ export function JobPosts() {
 
           {/* Responsibilities Section */}
           <div className="space-y-6">
-            <div>
-              <h3 className="mb-4">Responsibilities</h3>
-              <Separator className="mb-6" />
-            </div>
-
             <div className="space-y-2">
               <Label htmlFor="responsibilities" className="text-sm">Responsibilities *</Label>
               <Textarea
@@ -233,11 +205,6 @@ export function JobPosts() {
 
           {/* Requirements Section */}
           <div className="space-y-6">
-            <div>
-              <h3 className="mb-4">Requirements</h3>
-              <Separator className="mb-6" />
-            </div>
-
             <div className="space-y-2">
               <Label htmlFor="requirements" className="text-sm">Requirements *</Label>
               <Textarea
@@ -254,12 +221,7 @@ export function JobPosts() {
           </div>
 
           {/* Benefits Section */}
-          <div className="space-y-6">
-            <div>
-              <h3 className="mb-4">Benefits</h3>
-              <Separator className="mb-6" />
-            </div>
-
+          <div className="space-y-6"> 
             <div className="grid gap-6">
               {/* Benefits */}
               <div className="space-y-2">
@@ -301,11 +263,6 @@ export function JobPosts() {
 
           {/* Job Settings Section */}
           <div className="space-y-6">
-            <div>
-              <h3 className="mb-4">Job Settings</h3>
-              <Separator className="mb-6" />
-            </div>
-
             <div className="grid gap-6">
               {/* Job Type */}
               <div className="space-y-3">
@@ -384,137 +341,6 @@ export function JobPosts() {
         </CardContent>
       </Card>
 
-      {/* Mastodon Post Preview Section */}
-      <div className="space-y-4">
-        <div>
-          <h3 className="mb-1">Mastodon Post Preview</h3>
-          <p className="text-sm text-muted-foreground">
-            This is how your job post will appear on Mastodon
-          </p>
-        </div>
-
-        <Card className="rounded-2xl border-2 border-purple-200 dark:border-purple-900/50 bg-gradient-to-br from-purple-50/50 via-white to-purple-50/30 dark:from-purple-950/20 dark:via-background dark:to-purple-950/10 shadow-sm">
-          <CardContent className="p-6">
-            {/* Post Header */}
-            <div className="flex items-start gap-3 mb-4">
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center flex-shrink-0">
-                <Briefcase className="w-6 h-6 text-white" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-sm">Your Company</span>
-                  <span className="text-xs text-muted-foreground">@yourcompany</span>
-                  <span className="text-xs text-muted-foreground">· now</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Post Content */}
-            <div className="space-y-4">
-              {/* Title with emoji and status */}
-              <div className="space-y-2">
-                <div className="flex items-start gap-2">
-                  <span className="text-lg">🔍</span>
-                  <div className="flex-1">
-                    <h4 className="leading-snug">{preview.title}</h4>
-                    <Badge 
-                      className={`mt-1 h-5 px-2 text-[11px] rounded-md ${
-                        preview.status === 'Open'
-                          ? 'bg-gradient-to-r from-purple-500 to-purple-600 text-white'
-                          : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
-                      }`}
-                    >
-                      {preview.status}
-                    </Badge>
-                  </div>
-                </div>
-              </div>
-
-              {/* Role Summary */}
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                {preview.roleSummary}
-              </p>
-
-              {/* Responsibilities */}
-              {formData.responsibilities && (
-                <div className="pt-2">
-                  <div className="text-sm mb-1.5">📋 Responsibilities:</div>
-                  <div className="text-sm text-muted-foreground leading-relaxed whitespace-pre-line pl-4">
-                    {preview.responsibilities}
-                  </div>
-                </div>
-              )}
-
-              {/* Requirements */}
-              {formData.requirements && (
-                <div className="pt-2">
-                  <div className="text-sm mb-1.5">✅ Requirements:</div>
-                  <div className="text-sm text-muted-foreground leading-relaxed whitespace-pre-line pl-4">
-                    {preview.requirements}
-                  </div>
-                </div>
-              )}
-
-              {/* Benefits */}
-              {formData.benefits && (
-                <div className="pt-2">
-                  <div className="text-sm mb-1.5">🎁 Benefits:</div>
-                  <div className="text-sm text-muted-foreground leading-relaxed pl-4">
-                    {preview.benefits}
-                  </div>
-                </div>
-              )}
-
-              {/* Job Details */}
-              {(preview.workingTime || preview.probation || preview.location || preview.jobType || preview.dueDate) && (
-                <div className="pt-3 border-t border-border/50 space-y-1.5">
-                  {preview.jobType && (
-                    <div className="text-sm text-foreground">{preview.jobType}</div>
-                  )}
-                  {preview.location && (
-                    <div className="text-sm text-foreground">{preview.location}</div>
-                  )}
-                  {preview.workingTime && (
-                    <div className="text-sm text-foreground">{preview.workingTime}</div>
-                  )}
-                  {preview.probation && (
-                    <div className="text-sm text-foreground">{preview.probation}</div>
-                  )}
-                  {preview.dueDate && (
-                    <div className="text-sm text-foreground">{preview.dueDate}</div>
-                  )}
-                </div>
-              )}
-
-              {/* Application Link */}
-              <div className="pt-3 border-t border-border/50">
-                <a 
-                  href="#" 
-                  className="text-xs text-purple-600 dark:text-purple-400 hover:underline inline-flex items-center gap-1"
-                >
-                  🔗 Apply here: [Application Link]
-                </a>
-              </div>
-            </div>
-
-            {/* Post Actions (like real Mastodon) */}
-            <div className="flex items-center gap-6 mt-6 pt-4 border-t border-border/30 text-muted-foreground">
-              <button className="flex items-center gap-2 text-xs hover:text-purple-600 transition-colors">
-                <MessageCircle className="w-4 h-4" />
-                <span>Reply</span>
-              </button>
-              <button className="flex items-center gap-2 text-xs hover:text-purple-600 transition-colors">
-                <Repeat2 className="w-4 h-4" />
-                <span>Boost</span>
-              </button>
-              <button className="flex items-center gap-2 text-xs hover:text-purple-600 transition-colors">
-                <Star className="w-4 h-4" />
-                <span>Favorite</span>
-              </button>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
 
       {/* Action Buttons */}
       <Card className="rounded-2xl shadow-sm sticky bottom-0  backdrop-blur-sm">

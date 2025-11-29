@@ -5,7 +5,6 @@ import { Dashboard } from './recruiterComponents/Dashboard';
 import { JobPosts } from './recruiterComponents/JobPosts';
 import { MatchingTracker } from './recruiterComponents/MatchingTracker';
 import { CandidateManager } from './recruiterComponents/CandidateManager';
-import { OffersMessages } from './recruiterComponents/OffersMessages';
 import { Analytics } from './recruiterComponents/Analytics';
 import { Settings } from './recruiterComponents/Settings';
 
@@ -31,8 +30,6 @@ export default function RecruiterPage() {
         return <MatchingTracker />;
       case 'candidates':
         return <CandidateManager />;
-      case 'offers':
-        return <OffersMessages />;
       case 'analytics':
         return <Analytics />;
       case 'settings':

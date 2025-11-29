@@ -13,7 +13,6 @@ export default function Sidebar({ activePage, onNavigate }: SidebarProps) {
     { id: 'job-matching', label: 'Job Matching', icon: Briefcase },
     { id: 'saved-jobs', label: 'Saved Jobs', icon: Star },
     { id: 'applied-jobs', label: 'Applied Jobs', icon: Send },
-    { id: 'company-chat', label: 'Company Chat', icon: MessageSquare },
     { id: 'settings', label: 'Settings', icon: Settings },
   ];
 
@@ -28,7 +27,7 @@ export default function Sidebar({ activePage, onNavigate }: SidebarProps) {
           </div>
           <div>
             <h1 className="text-foreground">Job Hub</h1>
-            <p className="text-xs text-muted-foreground">Powered by Mastodon</p>
+            <p className="text-xs text-muted-foreground">Candidate</p>
           </div>
         </div>
       </div>

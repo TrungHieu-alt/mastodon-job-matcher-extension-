@@ -1,14 +1,16 @@
+# models/user.py
 from beanie import Document
-from typing import Optional
-from pydantic import EmailStr
+from datetime import datetime
+from typing import Literal
+
 
 class User(Document):
-    email: EmailStr
+    user_id: int
+    email: str
     password_hash: str
-    role: str  # candidate | recruiter | admin
-    name: str
-    avatar: Optional[str] = None
-    location: Optional[str] = None
+    role: Literal["candidate", "recruiter"]
+    created_at: datetime = datetime.utcnow()
+    updated_at: datetime = datetime.utcnow()
 
     class Settings:
         name = "users"

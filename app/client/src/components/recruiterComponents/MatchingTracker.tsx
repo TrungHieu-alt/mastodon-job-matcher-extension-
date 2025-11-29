@@ -3,54 +3,70 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
-import { Search, Users, TrendingUp, Calendar } from 'lucide-react';
+import { Search, Users, TrendingUp, Calendar, Plus, MoreVertical, Edit, ExternalLink, XCircle, Trash2, Sparkles } from 'lucide-react';
 import { CandidateListModal } from './CandidateListModel';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '../ui/dropdown-menu';
 
 const jobPosts = [
   {
     id: 1,
     title: 'Senior React Developer',
     tags: ['React', 'TypeScript', 'Node.js', 'Remote'],
-    matchCount: 24,
+    matchCount: 18,
+    applicants: 24,
     topSkills: ['React Hooks', 'Redux', 'Jest'],
     matchPercentage: 94,
     posted: '2024-10-28',
+    status: 'Open' as const,
   },
   {
     id: 2,
     title: 'Product Designer',
     tags: ['Figma', 'UI/UX', 'Design Systems', 'Remote'],
-    matchCount: 18,
+    matchCount: 12,
+    applicants: 18,
     topSkills: ['Figma', 'Prototyping', 'User Research'],
     matchPercentage: 88,
     posted: '2024-10-27',
+    status: 'Open' as const,
   },
   {
     id: 3,
     title: 'DevOps Engineer',
     tags: ['AWS', 'Kubernetes', 'Docker', 'CI/CD'],
-    matchCount: 15,
+    matchCount: 11,
+    applicants: 15,
     topSkills: ['AWS', 'Terraform', 'GitHub Actions'],
     matchPercentage: 91,
     posted: '2024-10-25',
+    status: 'Closed' as const,
   },
   {
     id: 4,
     title: 'Backend Engineer',
     tags: ['Python', 'Django', 'PostgreSQL', 'Remote'],
-    matchCount: 21,
+    matchCount: 16,
+    applicants: 21,
     topSkills: ['Python', 'REST APIs', 'Database Design'],
     matchPercentage: 92,
     posted: '2024-10-22',
+    status: 'Open' as const,
   },
   {
     id: 5,
     title: 'Mobile Developer (React Native)',
     tags: ['React Native', 'iOS', 'Android', 'Remote'],
-    matchCount: 12,
+    matchCount: 9,
+    applicants: 12,
     topSkills: ['React Native', 'Mobile UI', 'App Store'],
     matchPercentage: 86,
     posted: '2024-10-20',
+    status: 'Closed' as const,
   },
 ];
 
@@ -72,14 +88,23 @@ export function MatchingTracker() {
           <h2>Matching Tracker</h2>
           <p className="text-muted-foreground">Track candidate matches across all active job posts</p>
         </div>
-        <div className="relative w-full md:w-80">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <Input
-            placeholder="Filter by hashtag / date / skill..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 bg-input-background border-border rounded-xl"
-          />
+        <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+          <div className="relative w-full md:w-80">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Input
+              placeholder="Filter by hashtag / date / skill..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10 bg-input-background border-border rounded-xl"
+            />
+          </div>
+          <Button 
+            onClick={() => {/* Navigation to job editor will be handled by parent */}}
+            className="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 rounded-xl whitespace-nowrap"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Create New Job Post
+          </Button>
         </div>
       </div>
 
@@ -93,22 +118,58 @@ export function MatchingTracker() {
             <CardHeader>
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1">
-                  <CardTitle className="mb-2">{job.title}</CardTitle>
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Calendar className="w-4 h-4" />
-                    <span>Posted {job.posted}</span>
+                  <CardTitle className="mb-1">{job.title}</CardTitle>
+                  {/* Status Badge */}
+                  <Badge 
+                    className={`h-5 px-2 text-[11px] rounded-md ${
+                      job.status === 'Open'
+                        ? 'bg-gradient-to-r from-purple-500 to-purple-600 text-white'
+                        : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
+                    }`}
+                  >
+                    {job.status}
+                  </Badge>
+                  <div className="flex items-center gap-4 text-sm text-muted-foreground mt-2">
+                    <div className="flex items-center gap-2">
+                      <Calendar className="w-4 h-4" />
+                      <span>Posted {job.posted}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Users className="w-4 h-4 text-purple-500" />
+                      <span>{job.applicants} Applicants</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Sparkles className="w-4 h-4 text-purple-500" />
+                      <span>{job.matchCount} Matches</span>
+                    </div>
                   </div>
                 </div>
-                <div className="flex flex-col items-end gap-1">
-                  <div className="flex items-center gap-2 text-sm">
-                    <Users className="w-4 h-4 text-purple-500" />
-                    <span>{job.matchCount} matches</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <TrendingUp className="w-4 h-4 text-green-500" />
-                    <span className="font-medium">{job.matchPercentage}%</span>
-                  </div>
-                </div>
+                {/* Dropdown Menu */}
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon" className="rounded-xl">
+                      <MoreVertical className="w-4 h-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-48 rounded-xl">
+                    <DropdownMenuItem className="rounded-lg cursor-pointer">
+                      <Edit className="w-4 h-4 mr-2" />
+                      Edit Post
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className="rounded-lg cursor-pointer">
+                      <ExternalLink className="w-4 h-4 mr-2" />
+                      View on Mastodon
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className="rounded-lg cursor-pointer">
+                      <XCircle className="w-4 h-4 mr-2" />
+                      Close Post
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className="rounded-lg cursor-pointer text-red-600 dark:text-red-400">
+                      <Trash2 className="w-4 h-4 mr-2" />
+                      Delete Post
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -154,13 +215,22 @@ export function MatchingTracker() {
                 </div>
               </div>
 
-              {/* Action Button */}
-              <Button 
-                className="w-full bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 rounded-xl"
-                onClick={() => setSelectedCandidate(true)}
-              >
-                View {job.matchCount} Matches
-              </Button>
+              {/* Action Buttons */}
+              <div className="flex gap-3">
+                <Button 
+                  variant="outline"
+                  className="flex-1 rounded-xl"
+                  onClick={() => setSelectedCandidate(true)}
+                >
+                  View Applicants ({job.applicants})
+                </Button>
+                <Button 
+                  className="flex-1 bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 rounded-xl"
+                  onClick={() => setSelectedCandidate(true)}
+                >
+                  View Matching ({job.matchCount})
+                </Button>
+              </div>
             </CardContent>
           </Card>
         ))}

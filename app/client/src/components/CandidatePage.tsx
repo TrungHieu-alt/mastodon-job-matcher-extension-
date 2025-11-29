@@ -7,7 +7,6 @@ import CreateCV from './candidateComponents/CreateCV';
 import MyCVs from './candidateComponents/MyCVs';
 import SavedJobs from './candidateComponents/SavedJobs';
 import AppliedJobs from './candidateComponents/AppliedJobs';
-import CompanyChat from './candidateComponents/CompanyChat';
 import Settings from './candidateComponents/Settings';
 
 export default function CandidatePage() {
@@ -45,8 +44,6 @@ export default function CandidatePage() {
         return <SavedJobs />;
       case 'applied-jobs':
         return <AppliedJobs />;
-      case 'company-chat':
-        return <CompanyChat />;
       case 'settings':
         return <Settings />;
       default:

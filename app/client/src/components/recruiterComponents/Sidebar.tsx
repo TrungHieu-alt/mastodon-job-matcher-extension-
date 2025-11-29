@@ -11,7 +11,6 @@ export function Sidebar({ currentPage, onNavigate }: SidebarProps) {
     { id: 'jobs', label: 'Job Posts', icon: Briefcase },
     { id: 'matching', label: 'Matching Tracker', icon: UserCheck },
     { id: 'candidates', label: 'Candidate Manager', icon: Users },
-    { id: 'offers', label: 'Offers & Messages', icon: MessageSquare },
     { id: 'analytics', label: 'Analytics', icon: BarChart3 },
     { id: 'settings', label: 'Settings', icon: Settings },
   ];
@@ -22,11 +21,11 @@ export function Sidebar({ currentPage, onNavigate }: SidebarProps) {
       <div className="p-6 border-b border-sidebar-border">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center">
-            <UserCheck className="w-6 h-6 text-white" />
+            <Briefcase className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h1 className="text-foreground">Matching Hub</h1>
-            <p className="text-xs text-muted-foreground">Powered by Mastodon</p>
+            <h1 className="text-foreground">Job Hub</h1>
+            <p className="text-xs text-muted-foreground">Recruiter</p>
           </div>
         </div>
       </div>
