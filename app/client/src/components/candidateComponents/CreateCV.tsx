@@ -89,7 +89,7 @@ export default function CreateCV() {
         <div className={`bg-white shadow-2xl rounded-lg w-[210mm] min-h-[297mm] p-16 ${currentTemplate.font}`}>
           {/* Header */}
           <div className="mb-8">
-            <div className={`bg-gradient-to-r ${currentTemplate.primaryColor} text-white p-8 -mx-16 -mt-16 mb-8 rounded-t-lg`}>
+            <div className={`bg-linear-to-r ${currentTemplate.primaryColor} text-white p-8 -mx-16 -mt-16 mb-8 rounded-t-lg`}>
               <input
                 type="text"
                 value={cvData.name}
@@ -282,7 +282,7 @@ export default function CreateCV() {
                       : 'border-border hover:border-primary/50'
                   }`}
                 >
-                  <div className={`h-32 bg-gradient-to-br ${tmpl.primaryColor} rounded-lg mb-3`}></div>
+                  <div className={`h-32 bg-linear-to-br ${tmpl.primaryColor} rounded-lg mb-3`}></div>
                   <p className="text-center">{tmpl.name}</p>
                 </button>
               ))}

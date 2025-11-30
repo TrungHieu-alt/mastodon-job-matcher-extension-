@@ -1,90 +1,14 @@
 import { useState } from 'react';
 import { Card, CardContent } from '../ui/card';
-import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Textarea } from '../ui/textarea';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
 import { 
-  Plus, 
-  Briefcase, 
-  Users, 
-  Calendar, 
-  MoreVertical, 
-  Edit, 
-  ExternalLink, 
-  XCircle, 
-  Trash2,
-  X,
-  Hash,
-  ArrowLeft,
   Save,
   Send,
-  MessageCircle,
-  Repeat2,
-  Star
 } from 'lucide-react';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '../ui/dropdown-menu';
 import { Separator } from '../ui/separator';
-
-const jobs = [
-  { 
-    id: 1, 
-    title: 'Senior React Developer', 
-    department: 'Engineering', 
-    description: 'Looking for an experienced React developer to join our team.',
-    requiredSkills: ['React', 'TypeScript', 'Node.js'],
-    applicants: 24, 
-    posted: '2024-10-28', 
-    status: 'Active' as const
-  },
-  { 
-    id: 2, 
-    title: 'Product Designer', 
-    department: 'Design', 
-    description: 'Creative product designer with strong UX background.',
-    requiredSkills: ['Figma', 'UI/UX', 'Prototyping'],
-    applicants: 18, 
-    posted: '2024-10-27', 
-    status: 'Active' as const
-  },
-  { 
-    id: 3, 
-    title: 'DevOps Engineer', 
-    department: 'Engineering', 
-    description: 'DevOps engineer to manage cloud infrastructure.',
-    requiredSkills: ['AWS', 'Kubernetes', 'Docker'],
-    applicants: 15, 
-    posted: '2024-10-25', 
-    status: 'Active' as const
-  },
-  { 
-    id: 4, 
-    title: 'UX Researcher', 
-    department: 'Design', 
-    description: 'UX researcher to conduct user studies and analysis.',
-    requiredSkills: ['User Research', 'Data Analysis', 'Figma'],
-    applicants: 12, 
-    posted: '2024-10-24', 
-    status: 'Closed' as const
-  },
-  { 
-    id: 5, 
-    title: 'Backend Engineer', 
-    department: 'Engineering', 
-    description: 'Backend engineer specializing in Python and Django.',
-    requiredSkills: ['Python', 'Django', 'PostgreSQL'],
-    applicants: 21, 
-    posted: '2024-10-22', 
-    status: 'Active' as const
-  },
-];
 
 export function JobPosts() {
   const [jobType, setJobType] = useState<'remote' | 'onsite' | 'hybrid'>('remote');
@@ -164,7 +88,7 @@ export function JobPosts() {
                   onClick={() => setStatus('Open')}
                   className={`rounded-xl h-11 ${
                     status === 'Open' 
-                      ? 'bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700' 
+                      ? 'bg-linear-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700' 
                       : ''
                   }`}
                 >
@@ -176,7 +100,7 @@ export function JobPosts() {
                   onClick={() => setStatus('Closed')}
                   className={`rounded-xl h-11 ${
                     status === 'Closed' 
-                      ? 'bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700' 
+                      ? 'bg-linear-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700' 
                       : ''
                   }`}
                 >
@@ -274,7 +198,7 @@ export function JobPosts() {
                     onClick={() => setJobType('remote')}
                     className={`rounded-xl h-11 ${
                       jobType === 'remote' 
-                        ? 'bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700' 
+                        ? 'bg-linear-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700' 
                         : ''
                     }`}
                   >
@@ -286,7 +210,7 @@ export function JobPosts() {
                     onClick={() => setJobType('onsite')}
                     className={`rounded-xl h-11 ${
                       jobType === 'onsite' 
-                        ? 'bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700' 
+                        ? 'bg-linear-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700' 
                         : ''
                     }`}
                   >
@@ -298,7 +222,7 @@ export function JobPosts() {
                     onClick={() => setJobType('hybrid')}
                     className={`rounded-xl h-11 ${
                       jobType === 'hybrid' 
-                        ? 'bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700' 
+                        ? 'bg-linear-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700' 
                         : ''
                     }`}
                   >
@@ -365,7 +289,7 @@ export function JobPosts() {
             </Button>
             <Button
               type="submit"
-              className="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 rounded-xl h-11 px-6 flex-1"
+              className="bg-linear-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 rounded-xl h-11 px-6 flex-1"
             >
               <Send className="w-4 h-4 mr-2" />
               Publish to Mastodon

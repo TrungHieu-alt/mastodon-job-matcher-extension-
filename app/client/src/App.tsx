@@ -6,6 +6,7 @@ import "./index.css";
 import CandidateDashboard from "./components/CandidatePage";
 import RecruiterDashboard from "./components/RecruiterPage";
 import AuthPage from "./components/AuthPage";
+import OnBoardingPage from "./components/OnBoardingPage";
 function App() {
   const role = localStorage.getItem("role"); 
   // role = "candidate" hoặc "recruiter"
@@ -21,6 +22,7 @@ function App() {
 
         {/* Recruiter */}
         <Route path="/recruiter" element={<RecruiterDashboard />} />
+        <Route path="/onboarding" element={<OnBoardingPage />} />
 
         {/* Auto redirect theo role */}
         <Route path="/" element={<Navigate to={`/${role || "auth"}`} replace />} />

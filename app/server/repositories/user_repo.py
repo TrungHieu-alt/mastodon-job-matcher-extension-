@@ -27,3 +27,12 @@ class UserRepository:
             await result.delete()
             return True
         return False
+    
+    @staticmethod
+    async def update_role(user_id: int, role: str) -> Optional[User]:
+        user = await User.find_one(User.user_id == user_id)
+        if not user:
+            return None
+        user.role = role
+        await user.save()
+        return user

@@ -1,74 +1,134 @@
-# li_adapter.py  ✅ fix metadata flatten for LlamaIndex >= 0.10.x
+# ======================================================
+#        CHROMA MULTI-FIELD VECTOR STORE (FINAL)
+# ======================================================
 
-from llama_index.core import Document, VectorStoreIndex, StorageContext, Settings
-from llama_index.embeddings.huggingface import HuggingFaceEmbedding
-from llama_index.vector_stores.chroma import ChromaVectorStore
-import chromadb, json
-from typing import Dict, Any
-from logics.embedder import json_to_text_auto
+import chromadb
+import numpy as np
+import json
+from typing import Dict, Any, List
 
-# --- Persistent Chroma client ---
-_chroma_client = chromadb.PersistentClient(path="chroma_db")
+chroma = chromadb.PersistentClient(path="chroma_multi")
 
-# --- Embedding model setup ---
-_embed = HuggingFaceEmbedding(model_name="sentence-transformers/all-MiniLM-L6-v2")
+# 5 collections cho 5 field
+CV_COLLECTIONS = {
+    "summary": chroma.get_or_create_collection("cv_summary"),
+    "skills": chroma.get_or_create_collection("cv_skills"),
+    "experience": chroma.get_or_create_collection("cv_experience"),
+    "projects": chroma.get_or_create_collection("cv_projects"),
+    "full": chroma.get_or_create_collection("cv_full"),
+}
 
-# --- Global settings ---
-Settings.embed_model = _embed
-Settings.chunk_size = 512
+JD_COLLECTIONS = {
+    "description": chroma.get_or_create_collection("jd_description"),
+    "skills": chroma.get_or_create_collection("jd_skills"),
+    "responsibilities": chroma.get_or_create_collection("jd_responsibilities"),
+    "techstack": chroma.get_or_create_collection("jd_techstack"),
+    "full": chroma.get_or_create_collection("jd_full"),
+}
 
 
-# Internal helper
-def _get_vector_store(collection_name: str) -> ChromaVectorStore:
-    collection = _chroma_client.get_or_create_collection(collection_name)
-    return ChromaVectorStore(chroma_collection=collection)
+# ======================================================
+#  UP SERT CV
+# ======================================================
 
-
-# =======================================================
-# 🧠 Public API
-# =======================================================
-
-def upsert_json_doc(collection_name: str, data: Dict[str, Any], metadata: Dict[str, Any]) -> str:
+def upsert_cv(cv_id: str, cv_json: Dict[str, Any], cv_emb: Dict[str, np.ndarray]):
     """
-    Convert JSON → text → embed → upsert vào Chroma (qua LlamaIndex).
-    Metadata giờ phải là flat dict (str, int, float, None)
+    cv_emb keys:
+        emb_summary, emb_skills, emb_experience, emb_projects, emb_full
     """
-    text = json_to_text_auto(data)
-    if not text.strip():
-        raise ValueError("Empty text after JSON conversion")
-
-    vector_store = _get_vector_store(collection_name)
-    storage_context = StorageContext.from_defaults(vector_store=vector_store)
-
-    # ✅ flatten _raw_json để tránh lỗi ValueError
-    flat_meta = metadata.copy()
-    flat_meta["_raw_json"] = json.dumps(data, ensure_ascii=False)
-
-    doc = Document(text=text, metadata=flat_meta)
-
-    index = VectorStoreIndex.from_documents(
-        [doc],
-        storage_context=storage_context,
-        show_progress=False,
+    CV_COLLECTIONS["summary"].upsert(
+        ids=[f"{cv_id}_summary"],
+        embeddings=[cv_emb["emb_summary"].tolist()],
+        metadatas=[{"cv_id": cv_id}]
+    )
+    CV_COLLECTIONS["skills"].upsert(
+        ids=[f"{cv_id}_skills"],
+        embeddings=[cv_emb["emb_skills"].tolist()],
+        metadatas=[{"cv_id": cv_id}]
+    )
+    CV_COLLECTIONS["experience"].upsert(
+        ids=[f"{cv_id}_experience"],
+        embeddings=[cv_emb["emb_experience"].tolist()],
+        metadatas=[{"cv_id": cv_id}]
+    )
+    CV_COLLECTIONS["projects"].upsert(
+        ids=[f"{cv_id}_projects"],
+        embeddings=[cv_emb["emb_projects"].tolist()],
+        metadatas=[{"cv_id": cv_id}]
+    )
+    CV_COLLECTIONS["full"].upsert(
+        ids=[f"{cv_id}_full"],
+        embeddings=[cv_emb["emb_full"].tolist()],
+        metadatas=[{"cv_id": cv_id, "_raw_json": json.dumps(cv_json)}]
     )
 
-    storage_context.persist()
-    print(f"✅ Indexed document into '{collection_name}' | meta: {metadata.get('filename','N/A')}")
-    return metadata.get("external_id", "")
+    print(f"✅ Upserted CV {cv_id} (5 vectors)")
 
 
-def query_topk(collection_name: str, query_text: str, top_k: int = 10):
-    """
-    Query top-k similar nodes using LlamaIndex + Chroma.
-    """
-    vector_store = _get_vector_store(collection_name)
-    storage_context = StorageContext.from_defaults(vector_store=vector_store)
+# ======================================================
+#  UP SERT JD
+# ======================================================
 
-    index = VectorStoreIndex.from_vector_store(
-        vector_store=vector_store,
-        storage_context=storage_context,
+def upsert_jd(jd_id: str, jd_json: Dict[str, Any], jd_emb: Dict[str, np.ndarray]):
+    JD_COLLECTIONS["description"].upsert(
+        ids=[f"{jd_id}_description"],
+        embeddings=[jd_emb["emb_description"].tolist()],
+        metadatas=[{"jd_id": jd_id}]
+    )
+    JD_COLLECTIONS["skills"].upsert(
+        ids=[f"{jd_id}_skills"],
+        embeddings=[jd_emb["emb_required_skills"].tolist()],
+        metadatas=[{"jd_id": jd_id}]
+    )
+    JD_COLLECTIONS["responsibilities"].upsert(
+        ids=[f"{jd_id}_responsibilities"],
+        embeddings=[jd_emb["emb_responsibilities"].tolist()],
+        metadatas=[{"jd_id": jd_id}]
+    )
+    JD_COLLECTIONS["techstack"].upsert(
+        ids=[f"{jd_id}_techstack"],
+        embeddings=[jd_emb["emb_techstack"].tolist()],
+        metadatas=[{"jd_id": jd_id}]
+    )
+    JD_COLLECTIONS["full"].upsert(
+        ids=[f"{jd_id}_full"],
+        embeddings=[jd_emb["emb_full"].tolist()],
+        metadatas=[{"jd_id": jd_id, "_raw_json": json.dumps(jd_json)}]
     )
 
-    qe = index.as_query_engine(similarity_top_k=top_k)
-    resp = qe.query(query_text)
-    return resp.source_nodes  # list[NodeWithScore]
+    print(f"✅ Upserted JD {jd_id} (5 vectors)")
+
+
+# ======================================================
+#  GET ALL (for brute-force)
+# ======================================================
+
+def get_all_cv_ids() -> List[str]:
+    ids = set()
+    for col in CV_COLLECTIONS.values():
+        for m in col.get(include=["metadatas"])["metadatas"]:
+            ids.add(m["cv_id"])
+    return list(ids)
+
+
+def get_all_jd_ids() -> List[str]:
+    ids = set()
+    for col in JD_COLLECTIONS.values():
+        for m in col.get(include=["metadatas"])["metadatas"]:
+            ids.add(m["jd_id"])
+    return list(ids)
+
+
+# ======================================================
+#  QUERY single field (summary, skills, ...)
+# ======================================================
+
+def query_cv_field(field: str, vector: np.ndarray, top_k=5):
+    col = CV_COLLECTIONS[field]
+    res = col.query(query_embeddings=[vector.tolist()], n_results=top_k)
+    return res
+
+def query_jd_field(field: str, vector: np.ndarray, top_k=5):
+    col = JD_COLLECTIONS[field]
+    res = col.query(query_embeddings=[vector.tolist()], n_results=top_k)
+    return res

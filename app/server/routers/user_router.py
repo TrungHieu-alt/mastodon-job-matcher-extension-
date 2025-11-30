@@ -25,3 +25,8 @@ async def get_user(user_id: int):
 async def delete_user(user_id: int):
     await UserService.delete_user(user_id)
     return {"message": "User deleted"}
+
+@router.put("/{user_id}/role", response_model=UserResponse)
+async def update_role(user_id: int, payload: dict):
+    role = payload.get("role")
+    return await UserService.update_role(user_id, role)

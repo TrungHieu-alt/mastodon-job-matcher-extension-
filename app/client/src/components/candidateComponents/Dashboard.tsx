@@ -1,5 +1,5 @@
 import { FileText, Briefcase, Send, Star, TrendingUp } from 'lucide-react';
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 export default function Dashboard() {
   const stats = [
@@ -78,7 +78,7 @@ export default function Dashboard() {
               className="bg-card rounded-2xl p-6 border border-border shadow-sm hover:shadow-md transition-shadow"
             >
               <div className="flex items-start justify-between mb-4">
-                <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${stat.color} flex items-center justify-center shadow-lg`}>
+                <div className={`w-12 h-12 rounded-xl bg-linear-to-br ${stat.color} flex items-center justify-center shadow-lg`}>
                   <Icon className="w-6 h-6 text-white" />
                 </div>
               </div>
@@ -166,7 +166,7 @@ export default function Dashboard() {
                     <div className="flex items-center gap-2">
                       <div className="flex-1 max-w-[100px] h-2 bg-muted rounded-full overflow-hidden">
                         <div
-                          className="h-full bg-gradient-to-r from-purple-500 to-purple-600 rounded-full"
+                          className="h-full bg-linear-to-r from-purple-500 to-purple-600 rounded-full"
                           style={{ width: `${job.matchScore}%` }}
                         ></div>
                       </div>

@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Briefcase, Users, MessageSquare, CheckCircle } from 'lucide-react';
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Badge } from '../ui/badge';
 
 const performanceData = [
@@ -25,7 +25,7 @@ export function Dashboard() {
     <div className="space-y-6">
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="rounded-2xl border-border shadow-sm bg-gradient-to-br from-purple-50 to-white dark:from-purple-950/20 dark:to-card">
+        <Card className="rounded-2xl border-border shadow-sm bg-linear-to-br from-purple-50 to-white dark:from-purple-950/20 dark:to-card">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm text-muted-foreground">Jobs Posted</CardTitle>
             <Briefcase className="w-5 h-5 text-purple-500" />
@@ -36,7 +36,7 @@ export function Dashboard() {
           </CardContent>
         </Card>
 
-        <Card className="rounded-2xl border-border shadow-sm bg-gradient-to-br from-blue-50 to-white dark:from-blue-950/20 dark:to-card">
+        <Card className="rounded-2xl border-border shadow-sm bg-linear-to-br from-blue-50 to-white dark:from-blue-950/20 dark:to-card">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm text-muted-foreground">Candidates Matched</CardTitle>
             <Users className="w-5 h-5 text-blue-500" />
@@ -47,7 +47,7 @@ export function Dashboard() {
           </CardContent>
         </Card>
 
-        <Card className="rounded-2xl border-border shadow-sm bg-gradient-to-br from-pink-50 to-white dark:from-pink-950/20 dark:to-card">
+        <Card className="rounded-2xl border-border shadow-sm bg-linear-to-br from-pink-50 to-white dark:from-pink-950/20 dark:to-card">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm text-muted-foreground">Messages Sent</CardTitle>
             <MessageSquare className="w-5 h-5 text-pink-500" />
@@ -58,7 +58,7 @@ export function Dashboard() {
           </CardContent>
         </Card>
 
-        <Card className="rounded-2xl border-border shadow-sm bg-gradient-to-br from-green-50 to-white dark:from-green-950/20 dark:to-card">
+        <Card className="rounded-2xl border-border shadow-sm bg-linear-to-br from-green-50 to-white dark:from-green-950/20 dark:to-card">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm text-muted-foreground">Offers Accepted</CardTitle>
             <CheckCircle className="w-5 h-5 text-green-500" />
@@ -133,7 +133,7 @@ export function Dashboard() {
                     <td className="py-3 px-4">
                       <Badge 
                         variant={job.status === 'Active' ? 'default' : 'secondary'}
-                        className={job.status === 'Active' ? 'bg-gradient-to-r from-purple-500 to-purple-600' : ''}
+                        className={job.status === 'Active' ? 'bg-linear-to-r from-purple-500 to-purple-600' : ''}
                       >
                         {job.status}
                       </Badge>
@@ -142,7 +142,7 @@ export function Dashboard() {
                       <div className="flex items-center gap-2">
                         <div className="flex-1 bg-accent rounded-full h-2 max-w-[100px]">
                           <div 
-                            className="bg-gradient-to-r from-purple-500 to-purple-600 h-2 rounded-full" 
+                            className="bg-linear-to-r from-purple-500 to-purple-600 h-2 rounded-full" 
                             style={{ width: `${job.matchScore}%` }}
                           />
                         </div>

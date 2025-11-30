@@ -10,7 +10,7 @@ export function ForgotPassword({ onNavigate, onOpenPolicy }: ForgotPasswordProps
   const [email, setEmail] = useState('');
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center p-6 relative overflow-hidden bg-gradient-to-br from-[#A78BFA] to-[#C7D2FE]">
+    <div className="min-h-screen w-full flex items-center justify-center p-6 relative overflow-hidden bg-linear-to-br from-[#A78BFA] to-[#C7D2FE]">
       {/* Background decorative elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 left-20 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
@@ -27,7 +27,7 @@ export function ForgotPassword({ onNavigate, onOpenPolicy }: ForgotPasswordProps
         >
           {/* Logo */}
           <div className="flex justify-center mb-4">
-            <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center shadow-lg shadow-purple-500/30">
+            <div className="w-16 h-16 bg-linear-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center shadow-lg shadow-purple-500/30">
               <Briefcase className="w-8 h-8 text-white" strokeWidth={2.5} />
             </div>
           </div>
@@ -54,7 +54,7 @@ export function ForgotPassword({ onNavigate, onOpenPolicy }: ForgotPasswordProps
           </div>
 
           {/* Primary Button */}
-          <button className="w-full bg-gradient-to-r from-purple-600 to-purple-500 text-white py-3.5 rounded-2xl mb-3 shadow-lg shadow-purple-500/30 hover:shadow-xl hover:shadow-purple-500/40 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]">
+          <button className="w-full bg-linear-to-r from-purple-600 to-purple-500 text-white py-3.5 rounded-2xl mb-3 shadow-lg shadow-purple-500/30 hover:shadow-xl hover:shadow-purple-500/40 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]">
             Send Reset Link
           </button>
 

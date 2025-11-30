@@ -86,7 +86,7 @@ export default function AppliedJobs() {
                 >
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center text-xl">
+                      <div className="w-10 h-10 rounded-lg bg-linear-to-br from-purple-400 to-purple-600 flex items-center justify-center text-xl">
                         {job.logo}
                       </div>
                       <span>{job.title}</span>

@@ -18,7 +18,7 @@ export function Settings() {
       <Card className="rounded-2xl border-border shadow-sm">
         <CardHeader>
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-linear-to-br from-purple-400 to-purple-600 flex items-center justify-center">
               <User className="w-5 h-5 text-white" />
             </div>
             <div>
@@ -42,7 +42,7 @@ export function Settings() {
             <Label>Company Website</Label>
             <Input defaultValue="https://techcorp.com" className="bg-input-background border-border rounded-xl" />
           </div>
-          <Button className="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 rounded-xl">
+          <Button className="bg-linear-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 rounded-xl">
             Save Changes
           </Button>
         </CardContent>
@@ -52,7 +52,7 @@ export function Settings() {
       <Card className="rounded-2xl border-border shadow-sm">
         <CardHeader>
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-linear-to-br from-blue-400 to-blue-600 flex items-center justify-center">
               <Bell className="w-5 h-5 text-white" />
             </div>
             <div>
@@ -92,7 +92,7 @@ export function Settings() {
       <Card className="rounded-2xl border-border shadow-sm">
         <CardHeader>
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-linear-to-br from-purple-400 to-purple-600 flex items-center justify-center">
               <Globe className="w-5 h-5 text-white" />
             </div>
             <div>
@@ -120,7 +120,7 @@ export function Settings() {
       <Card className="rounded-2xl border-border shadow-sm">
         <CardHeader>
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-red-400 to-red-600 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-linear-to-br from-red-400 to-red-600 flex items-center justify-center">
               <Lock className="w-5 h-5 text-white" />
             </div>
             <div>

@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
-import { Search, Users, TrendingUp, Calendar, Plus, MoreVertical, Edit, ExternalLink, XCircle, Trash2, Sparkles } from 'lucide-react';
+import { Search, Users, Calendar, Plus, MoreVertical, Edit, ExternalLink, XCircle, Trash2, Sparkles } from 'lucide-react';
 import { CandidateListModal } from './CandidateListModel';
 import {
   DropdownMenu,
@@ -100,7 +100,7 @@ export function MatchingTracker() {
           </div>
           <Button 
             onClick={() => {/* Navigation to job editor will be handled by parent */}}
-            className="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 rounded-xl whitespace-nowrap"
+            className="bg-linear-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 rounded-xl whitespace-nowrap"
           >
             <Plus className="w-4 h-4 mr-2" />
             Create New Job Post
@@ -123,7 +123,7 @@ export function MatchingTracker() {
                   <Badge 
                     className={`h-5 px-2 text-[11px] rounded-md ${
                       job.status === 'Open'
-                        ? 'bg-gradient-to-r from-purple-500 to-purple-600 text-white'
+                        ? 'bg-linear-to-r from-purple-500 to-purple-600 text-white'
                         : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
                     }`}
                   >
@@ -193,7 +193,7 @@ export function MatchingTracker() {
                   {job.topSkills.map((skill, idx) => (
                     <Badge 
                       key={idx}
-                      className="bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg"
+                      className="bg-linear-to-r from-purple-500 to-purple-600 rounded-lg"
                     >
                       {skill}
                     </Badge>
@@ -209,7 +209,7 @@ export function MatchingTracker() {
                 </div>
                 <div className="bg-accent rounded-full h-2">
                   <div 
-                    className="bg-gradient-to-r from-purple-500 to-purple-600 h-2 rounded-full transition-all" 
+                    className="bg-linear-to-r from-purple-500 to-purple-600 h-2 rounded-full transition-all" 
                     style={{ width: `${job.matchPercentage}%` }}
                   />
                 </div>
@@ -225,7 +225,7 @@ export function MatchingTracker() {
                   View Applicants ({job.applicants})
                 </Button>
                 <Button 
-                  className="flex-1 bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 rounded-xl"
+                  className="flex-1 bg-linear-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 rounded-xl"
                   onClick={() => setSelectedCandidate(true)}
                 >
                   View Matching ({job.matchCount})

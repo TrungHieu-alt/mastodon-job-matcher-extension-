@@ -1,7 +1,12 @@
+# ============================================
+#           EMBEDDER FINAL VERSION
+#    Multi-field Embedding for CV & JD
+# ============================================
+
 from sentence_transformers import SentenceTransformer
 import numpy as np
 
-# ------------------ Setup model ------------------
+# Load model
 try:
     model = SentenceTransformer("all-MiniLM-L6-v2")
     print("✅ Model loaded successfully.")
@@ -10,138 +15,121 @@ except Exception as e:
     model = None
 
 
-# ------------------ JSON → Text (CV) ------------------
-def json_to_text_cv(data: dict) -> str:
-    try:
-        parts = []
-        if data.get("summary"):
-            parts.append(f"Summary: {data['summary']}")
-        if data.get("skills"):
-            parts.append("Skills: " + ", ".join(sorted(set(data["skills"]))))
+# ======================================================
+# UTILS — safe embed string → vector
+# ======================================================
+def embed_text(text: str):
+    if not text or not text.strip():
+        return np.zeros(384, dtype=np.float32)
 
-        if data.get("experiences"):
-            exps = []
-            for e in data["experiences"]:
-                role = e.get("role", "")
-                org = e.get("organization", "")
-                yrs = e.get("years", 0)
-                highlights = "; ".join(e.get("highlights", []))
-                exps.append(f"{role} at {org} ({yrs} yrs) - {highlights}")
-            parts.append("Experience: " + " | ".join(exps))
-
-        if data.get("projects"):
-            projs = []
-            for p in data["projects"]:
-                projs.append(f"{p.get('role','')} - {'; '.join(p.get('highlights', []))}")
-            parts.append("Projects: " + " | ".join(projs))
-
-        if data.get("education"):
-            edus = []
-            for edu in data["education"]:
-                edus.append(f"{edu.get('degree','')} at {edu.get('school','')} ({edu.get('year','')}) GPA {edu.get('gpa','')}")
-            parts.append("Education: " + " | ".join(edus))
-
-        if data.get("certifications"):
-            certs = [f"{c.get('name','')} ({c.get('year','')})" for c in data["certifications"]]
-            parts.append("Certifications: " + ", ".join(certs))
-
-        return "\n".join(parts).strip()
-    except Exception as e:
-        print(f"❌ Error converting CV JSON to text: {e}")
-        return ""
+    emb = model.encode(text.strip(), normalize_embeddings=True)
+    return np.array(emb, dtype=np.float32)
 
 
-# ------------------ JSON → Text (JD) ------------------
-def json_to_text_jd(data: dict) -> str:
-    try:
-        parts = []
-        if data.get("title"):
-            parts.append(f"Job Title: {data['title']}")
-        if data.get("summary"):
-            parts.append(f"Summary: {data['summary']}")
-        if data.get("requirements"):
-            parts.append("Requirements: " + ", ".join(sorted(set(data["requirements"]))))
-        if data.get("experience_level"):
-            parts.append(f"Experience Level: {data['experience_level']}")
-        if data.get("years_of_experience"):
-            parts.append(f"Years of Experience: {data['years_of_experience']}")
-        if data.get("tech_stack"):
-            parts.append("Tech Stack: " + ", ".join(sorted(set(data["tech_stack"]))))
-        if data.get("nice_to_have"):
-            parts.append("Nice to have: " + ", ".join(sorted(set(data["nice_to_have"]))))
-        return "\n".join(parts).strip()
-    except Exception as e:
-        print(f"❌ Error converting JD JSON to text: {e}")
-        return ""
+# ======================================================
+#   EMBED CV — 5 FIELDS
+# ======================================================
+
+def embed_cv(cv: dict):
+    """
+    Input schema: (from cvParser_final.py)
+    {
+        "summary": "",
+        "skills": [],
+        "experience_text": "",
+        "projects_text": "",
+        "full_text": ""
+    }
+    """
+
+    summary = cv.get("summary", "")
+    skills_list = cv.get("skills", [])
+    skills_text = ", ".join(skills_list)
+    exp_text = cv.get("experience_text", "")
+    proj_text = cv.get("projects_text", "")
+    full = cv.get("full_text", "")
+
+    return {
+        "emb_summary": embed_text(summary),
+        "emb_skills": embed_text(skills_text),
+        "emb_experience": embed_text(exp_text),
+        "emb_projects": embed_text(proj_text),
+        "emb_full": embed_text(full)
+    }
 
 
-# ------------------ Detect Type & Convert ------------------
-def json_to_text_auto(data: dict) -> str:
-    try:
-        if "skills" in data or "education" in data or "experiences" in data:
-            return json_to_text_cv(data)
-        elif "requirements" in data or "tech_stack" in data or "experience_level" in data:
-            return json_to_text_jd(data)
-        else:
-            print("⚠️ Không xác định được loại dữ liệu (CV/JD), trả text thô.")
-            return str(data)
-    except Exception as e:
-        print(f"❌ Error detecting JSON type: {e}")
-        return str(data)
+# ======================================================
+#   EMBED JD — 5 FIELDS
+# ======================================================
+
+def embed_jd(jd: dict):
+    """
+    Input schema: (from jdParser_final.py)
+    {
+        "job_description": "",
+        "required_skills": [],
+        "responsibilities": "",
+        "techstack": "",
+        "full_text": ""
+    }
+    """
+
+    desc = jd.get("job_description", "")
+    req_skills_list = jd.get("required_skills", [])
+    skills_text = ", ".join(req_skills_list)
+    responsibilities = jd.get("responsibilities", "")
+    tech_text = jd.get("techstack", "")
+    full = jd.get("full_text", "")
+
+    return {
+        "emb_description": embed_text(desc),
+        "emb_required_skills": embed_text(skills_text),
+        "emb_responsibilities": embed_text(responsibilities),
+        "emb_techstack": embed_text(tech_text),
+        "emb_full": embed_text(full)
+    }
 
 
-# ------------------ Embed JSON ------------------
-def embed_json(data: dict):
-    try:
-        text = json_to_text_auto(data)
-        print("\n----- Text to Embed -----")
-        print(text)
+# ======================================================
+# AUTO-DETECT (CV or JD)
+# ======================================================
 
-        if not text.strip():
-            raise ValueError("Empty text after JSON conversion")
-
-        if model is None:
-            raise RuntimeError("Embedding model is not loaded!")
-
-        emb = model.encode(text, normalize_embeddings=True)
-        print(f"✅ Embedding success, vector length = {len(emb)}")
-        return text, np.array(emb, dtype=np.float32)
-
-    except Exception as e:
-        print(f"❌ Error during embedding: {e}")
-        return "", np.array([])
+def embed_auto(data: dict):
+    if "experience_text" in data or "projects_text" in data:
+        return embed_cv(data)
+    elif "responsibilities" in data or "techstack" in data:
+        return embed_jd(data)
+    else:
+        raise ValueError("❌ Cannot detect CV/JD format. Wrong schema.")
 
 
-# ------------------ Test ------------------
+# ======================================================
+# TEST
+# ======================================================
 if __name__ == "__main__":
-    try:
-        # CV Sample
-        sample_cv = {
-            "summary": "Backend developer skilled in Node.js and SQL.",
-            "skills": ["Node.js", "Express", "MySQL"],
-            "experiences": [{"role": "Backend Dev", "organization": "ABC", "years": 1.5, "highlights": ["Built REST APIs"]}],
-            "projects": [{"role": "Chat App", "highlights": ["Implemented real-time messaging with Socket.IO"]}],
-            "education": [{"degree": "Computer Science", "school": "HUST", "year": "2022", "gpa": "3.7/4.0"}],
-        }
 
-        # JD Sample
-        sample_jd = {
-            "title": "Backend Developer",
-            "summary": "Build and maintain scalable APIs using Node.js and databases.",
-            "requirements": ["Node.js", "Express", "MySQL", "Docker"],
-            "experience_level": "Mid",
-            "years_of_experience": "2+",
-            "tech_stack": ["Node.js", "Express", "MySQL", "Docker", "AWS"],
-            "nice_to_have": ["CI/CD", "DevOps"]
-        }
+    sample_cv = {
+        "summary": "Backend dev with Python + FastAPI",
+        "skills": ["Python", "FastAPI", "MongoDB"],
+        "experience_text": "Built backend services and optimized database queries.",
+        "projects_text": "Developed job matching system using embeddings.",
+        "full_text": "This is full CV text."
+    }
 
-        print("\n=== 🧠 EMBED CV ===")
-        text_cv, vec_cv = embed_json(sample_cv)
-        print("Vector shape (CV):", vec_cv.shape)
+    sample_jd = {
+        "job_description": "We need a backend engineer to build FastAPI services.",
+        "required_skills": ["Python", "FastAPI", "MongoDB"],
+        "responsibilities": "Build APIs. Optimize DB queries.",
+        "techstack": "FastAPI, Python, MongoDB",
+        "full_text": "This is full JD text."
+    }
 
-        print("\n=== 🧠 EMBED JD ===")
-        text_jd, vec_jd = embed_json(sample_jd)
-        print("Vector shape (JD):", vec_jd.shape)
+    print("\n=== CV Embeddings ===")
+    cv_vecs = embed_cv(sample_cv)
+    for k, v in cv_vecs.items():
+        print(k, v.shape)
 
-    except Exception as e:
-        print(f"❌ Fatal error in __main__: {e}")
+    print("\n=== JD Embeddings ===")
+    jd_vecs = embed_jd(sample_jd)
+    for k, v in jd_vecs.items():
+        print(k, v.shape)

@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
+from fastapi.middleware.cors import CORSMiddleware   # ← thêm dòng này
 from db import init_db
 from routers import (
     user_router,
@@ -30,15 +31,34 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+# ------------------------------
+# 🔥 Enable CORS here
+# ------------------------------
+origins = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,         
+    allow_credentials=True,
+    allow_methods=["*"],           
+    allow_headers=["*"],           
+)
+# ------------------------------
+
+
 # Include routers
-app.include_router(user_router.router)
-app.include_router(candidate_router.router)
-app.include_router(recruiter_router.router)
-app.include_router(job_router.router)
-app.include_router(cv_router.router)
-app.include_router(application_router.router)
-app.include_router(match_router.router)
-app.include_router(system_router.router)
+app.include_router(user_router.router, prefix="/api")
+app.include_router(candidate_router.router, prefix="/api")
+app.include_router(recruiter_router.router, prefix="/api")
+app.include_router(job_router.router, prefix="/api")
+app.include_router(cv_router.router, prefix="/api")
+app.include_router(application_router.router, prefix="/api")
+app.include_router(match_router.router, prefix="/api")
+app.include_router(system_router.router, prefix="/api")
+
 
 
 @app.get("/")

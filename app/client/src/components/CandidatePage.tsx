@@ -4,7 +4,7 @@ import Topbar from './candidateComponents/Topbar';
 import Dashboard from './candidateComponents/Dashboard';
 import JobMatching from './candidateComponents/JobMatching';
 import CreateCV from './candidateComponents/CreateCV';
-import MyCVs from './candidateComponents/MyCVs';
+// import MyCVs from './candidateComponents/MyCVs';
 import SavedJobs from './candidateComponents/SavedJobs';
 import AppliedJobs from './candidateComponents/AppliedJobs';
 import Settings from './candidateComponents/Settings';
@@ -38,8 +38,8 @@ export default function CandidatePage() {
         return <JobMatching />;
       case 'create-cv':
         return <CreateCV />;
-      case 'my-cvs':
-        return <MyCVs />;
+      // case 'my-cvs':
+      //   return <MyCVs />;
       case 'saved-jobs':
         return <SavedJobs />;
       case 'applied-jobs':

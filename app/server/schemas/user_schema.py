@@ -1,12 +1,12 @@
 from pydantic import BaseModel, EmailStr
 from datetime import datetime
-from typing import Literal
+from typing import Literal, Optional
 
 
 class UserRegisterRequest(BaseModel):
     email: EmailStr
     password: str
-    role: Literal["candidate", "recruiter"]
+    role: Optional[Literal["candidate", "recruiter"]]
 
 
 class UserLoginRequest(BaseModel):
@@ -17,7 +17,7 @@ class UserLoginRequest(BaseModel):
 class UserResponse(BaseModel):
     user_id: int
     email: str
-    role: str
+    role: Optional[str] = None  
     created_at: datetime
     updated_at: datetime
 
